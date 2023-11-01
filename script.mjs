@@ -9,18 +9,22 @@ try {
 } catch (err) { console.error(err.message) };
 
 try {
-  const projectFolder = new URL('./public/[css, img]/', import.meta.url);
+  const projectFolder = new URL('./public/[css, img, js]/', import.meta.url);
   fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
 } catch (err) { console.error(err.message) };
 
 // Créer le fichier index.js
+
 setTimeout(() => {
-fs.writeFileSync('./app/index.js', `
+fs.writeFileSync('./index.js', `
 import express from "express";
 import 'dotenv/config';
 
 const port = process.env.PORT || 3000;
 const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', './app/views');
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");
