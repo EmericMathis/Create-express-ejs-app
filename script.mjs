@@ -4,58 +4,61 @@ import fs from 'fs';
 // Dossier app et sous dossiers
 const appFolders = ['controllers', 'datas', 'models', 'views']
 for (const folder of appFolders) {
-try {
-  const projectFolder = new URL(`./app/${appFolders}`, import.meta.url);
-  fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
+  try {
+    const projectFolder = new URL(`./app/${appFolders}`, import.meta.url);
+    fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
 
-} catch (err) { console.error(err.message) }};
+  } catch (err) { console.error(err.message) }
+};
 
 // Dossier public et sous dossiers
 const publicFolders = ['css', 'img', 'js']
-try {
-  const projectFolder = new URL(`./public/${publicFolders}/`, import.meta.url);
-  fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
-} catch (err) { console.error(err.message) };
+for (const folder of publicFolders) {
+  try {
+    const projectFolder = new URL(`./public/${publicFolders}/`, import.meta.url);
+    fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
+  } catch (err) { console.error(err.message) }
+};
 
-//! Créer le fichier index.js
 
+//! Créer les fichiers après la création des dossiers
 setTimeout(() => {
-fs.writeFileSync('./index.js', `
-import express from "express";
-import 'dotenv/config';
 
-const port = process.env.PORT || 3000;
-const app = express();
+  // Créer le fichier index.js
 
-app.set('view engine', 'ejs');
-app.set('views', './app/views');
+  fs.writeFileSync('./index.js', `
+  import express from "express";
+  import 'dotenv/config';
+  
+  const port = process.env.PORT || 3000;
+  const app = express();
+  
+  app.set('view engine', 'ejs');
+  app.set('views', './app/views');
+  
+  app.get("/", (req, res) => {
+    res.send("Hello, world!");
+  });
+  
+  app.listen (port, () => {
+      console.log(\`Server running on http://localhost:\${port}/\`)});
+  `, "utf-8");
 
-app.get("/", (req, res) => {
-  res.send("Hello, world!");
-});
+  // Créer le fichier router.js
 
-app.listen (port, () => {
-    console.log(\`Server running on http://localhost:\${port}/\`)});
-`, "utf-8");
-}, 1000);
-
-//! Créer le fichier router.js
-
-setTimeout(() => {
   fs.writeFileSync('./app/router.js', `
-import express from 'express';
+  import express from 'express';
 
-const router = express.Router();
+  const router = express.Router();
 
-router.get('/', mainController.home);
+  router.get('/', mainController.home);
 
-export default router;
-`, "utf-8");
-}, 1000);
+  export default router;
+  `, "utf-8");
 
-//! Créer package.json
+  // Créer package.json
 
-fs.writeFileSync('package.json', `
+  fs.writeFileSync('package.json', `
   {
     "name": "project-name",
     "version": "1.0.0",
@@ -78,4 +81,8 @@ fs.writeFileSync('package.json', `
       "node-dev": "^8.0.0"
     }
   }
-  `)
+  `
+  )
+}, 1000);
+
+
