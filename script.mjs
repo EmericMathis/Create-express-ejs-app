@@ -4,16 +4,17 @@ import fs from 'fs';
 try {
   const projectFolder = new URL('./app/[controllers, models, views]/', import.meta.url);
   fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
-} catch (err) {console.error(err.message)};
+
+} catch (err) { console.error(err.message) };
 
 try {
   const projectFolder = new URL('./public/[css, img]/', import.meta.url);
   fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
-} catch (err) {console.error(err.message)};
+} catch (err) { console.error(err.message) };
 
 // Créer le fichier index.js
-const indexFile = `index.js`;
-fs.writeFileSync(indexFile, `
+const index = `index.js`;
+fs.writeFileSync(index, `
 import express from "express";
 import 'dotenv/config';
 
@@ -27,3 +28,18 @@ app.get("/", (req, res) => {
 app.listen (port, () => {
     console.log(\`Server running on http://localhost:\${port}/\`)});
 `, "utf-8");
+
+// Créer le fichier router.js
+setTimeout(() => {
+  fs.writeFileSync('./app/router.js', `
+import express from 'express';
+
+const router = express.Router();
+
+router.get('/', mainController.home);
+
+export default router;
+`, "utf-8");
+
+  console.log(`Created router.js`);
+}, 1000);
