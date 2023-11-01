@@ -1,8 +1,9 @@
 import fs from 'fs';
 
 // Créer les dossiers
+
 try {
-  const projectFolder = new URL('./app/[controllers, models, views]/', import.meta.url);
+  const projectFolder = new URL('./app/[controllers, datas, models, views]/', import.meta.url);
   fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
 
 } catch (err) { console.error(err.message) };
@@ -13,8 +14,8 @@ try {
 } catch (err) { console.error(err.message) };
 
 // Créer le fichier index.js
-const index = `index.js`;
-fs.writeFileSync(index, `
+setTimeout(() => {
+fs.writeFileSync('./app/index.js', `
 import express from "express";
 import 'dotenv/config';
 
@@ -28,8 +29,10 @@ app.get("/", (req, res) => {
 app.listen (port, () => {
     console.log(\`Server running on http://localhost:\${port}/\`)});
 `, "utf-8");
+}, 1000);
 
 // Créer le fichier router.js
+
 setTimeout(() => {
   fs.writeFileSync('./app/router.js', `
 import express from 'express';
@@ -40,6 +43,31 @@ router.get('/', mainController.home);
 
 export default router;
 `, "utf-8");
-
-  console.log(`Created router.js`);
 }, 1000);
+
+// Créer package.json
+
+fs.writeFileSync('package.json', `
+  {
+    "name": "project-name",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+      "start": "node ./app/index",
+      "dev": "node-dev ./app/index --clear --notify=false"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "dotenv": "^16.0.3",
+      "ejs": "^3.1.8",
+      "express": "^4.18.2"
+    },
+    "devDependencies": {
+      "node-dev": "^8.0.0"
+    }
+  }
+  `)
