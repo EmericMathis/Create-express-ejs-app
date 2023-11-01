@@ -1,19 +1,23 @@
 import fs from 'fs';
 
-// Créer les dossiers
-
+//! Créer les dossiers
+// Dossier app et sous dossiers
+const appFolders = ['controllers', 'datas', 'models', 'views']
+for (const folder of appFolders) {
 try {
-  const projectFolder = new URL('./app/[controllers, datas, models, views]/', import.meta.url);
+  const projectFolder = new URL(`./app/${appFolders}`, import.meta.url);
   fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
 
-} catch (err) { console.error(err.message) };
+} catch (err) { console.error(err.message) }};
 
+// Dossier public et sous dossiers
+const publicFolders = ['css', 'img', 'js']
 try {
-  const projectFolder = new URL('./public/[css, img, js]/', import.meta.url);
+  const projectFolder = new URL(`./public/${publicFolders}/`, import.meta.url);
   fs.mkdir(projectFolder, { recursive: true }, (err) => err && console.error(err));
 } catch (err) { console.error(err.message) };
 
-// Créer le fichier index.js
+//! Créer le fichier index.js
 
 setTimeout(() => {
 fs.writeFileSync('./index.js', `
@@ -35,7 +39,7 @@ app.listen (port, () => {
 `, "utf-8");
 }, 1000);
 
-// Créer le fichier router.js
+//! Créer le fichier router.js
 
 setTimeout(() => {
   fs.writeFileSync('./app/router.js', `
@@ -49,7 +53,7 @@ export default router;
 `, "utf-8");
 }, 1000);
 
-// Créer package.json
+//! Créer package.json
 
 fs.writeFileSync('package.json', `
   {
